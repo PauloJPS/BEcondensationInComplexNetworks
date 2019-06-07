@@ -3,9 +3,10 @@ import igraph as ig
 import matplotlib.pyplot as plt
 
 class boseEinteinNetwork():
-    def __init__(self, m, fitnessDistribution):
+    def __init__(self, m, fitnessDistribution, keys):
         self.n = m
         self.K = {}
+        self.__keys = keys
         self.__m = m
         self.__time = 0
         self.__fitnessDistribution = fitnessDistribution
@@ -20,7 +21,7 @@ class boseEinteinNetwork():
         self.__time = self.__m
 
     def __createFitnessList(self):
-        self.fitnessList = np.array([ self.__fitnessDistribution() for i in range(self.n)])
+        self.fitnessList = np.array([ self.__fitnessDistribution(**self.__keys) for i in range(self.n)])
 
     def __createDegreeList(self):
         self.degreeList = np.array([self.__m for i in range(self.n)])
@@ -44,6 +45,9 @@ class boseEinteinNetwork():
 
     def getFitnessDistribution(self):
         return self.__fitnessDistribution
+    
+    def getDistributionsKeys(self):
+        return self.__keys
 
     def get_m(self):
         return self.__m
@@ -72,7 +76,7 @@ class boseEinteinNetwork():
         self.__atualizeDegreeList(targets)
         self.__atualizeK()
 
-        self.fitnessList = np.append(self.fitnessList, self.__fitnessDistribution())
+        self.fitnessList = np.append(self.fitnessList, self.__fitnessDistribution(**self.__keys))
         self.__indexArray.append(self.n)
 
         self.n += 1

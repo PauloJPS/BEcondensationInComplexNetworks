@@ -1,9 +1,15 @@
 import numpy as np
 from networkGrowing import *
+from dists import *
 
 class Condensete(boseEinteinNetwork):
-    def __init__(self, N, beta, m, fitnessDistribution, trials):
-        super(Condensete, self).__init__(m, fitnessDistribution)
+    def __init__(self, N, beta, m,trials, fitnessDistribution, keys):
+
+        if fitnessDistribution=='FGR':fitnessDistribution = fitGetRicher
+        elif fitnessDistribution=='FGA': fitnessDistribution = scaleFree
+        else: pass 
+
+        super(Condensete, self).__init__(m, fitnessDistribution, keys)
         self.beta = beta 
         self.addNodes(N-1)
         self.trials = trials
