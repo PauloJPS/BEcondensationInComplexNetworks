@@ -3,12 +3,10 @@ from networkGrowing import *
 from dists import *
 
 class Condensete(boseEinteinNetwork):
-    def __init__(self, N, beta, m, trials, fitnessDistribution, keys):
-        if fitnessDistribution == 'FGR':
-            fitnessDistribution = rhoEta
-        elif fitnessDistribution == 'FGA':
-            fitnessDistribution = etaOne
-        else: pass
+   def __init__(self, N, beta, m,trials, fitnessDistribution, keys):
+        if fitnessDistribution=='FGR':fitnessDistribution = fitGetRicher
+        elif fitnessDistribution=='FGA': fitnessDistribution = scaleFree
+        else: pass 
 
         super(Condensete, self).__init__(m, fitnessDistribution, keys)
         self.beta = beta 

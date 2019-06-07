@@ -45,6 +45,9 @@ class boseEinteinNetwork():
 
     def getFitnessDistribution(self):
         return self.__fitnessDistribution
+    
+    def getDistributionsKeys(self):
+        return self.__keys
 
     def get_m(self):
         return self.__m
