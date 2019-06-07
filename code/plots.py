@@ -3,6 +3,26 @@ import matplotlib.pyplot as plt
 import igraph as ig
 import networkx as nx 
 from igraph2nx import *
+from dists import *
+
+def plotRhoHist():
+    ensamble = []
+    rho = lambda x : 2*(-np.log(x))/x
+    for i in range(1000):
+        ensamble.append(rhoEta(1,1))
+    x = np.arange(np.exp(-1), 1, 0.01)
+
+    plt.figure(figsize=(13,10))
+    plt.plot(x, rho(x), label=r'$\rho(\eta)$')
+    plt.hist(ensamble, density=1, label=r'$F^{-1}(u)$')
+
+    plt.legend(fontsize=20)
+    plt.xlabel(r'$\eta$', fontsize=30, labelpad=-10)
+    plt.ylabel('Freq.', rotation=0, labelpad=35, fontsize=20)
+    #plt.tight_layout()
+
+
+
 
 def plotER_and_BA():
     er = ig.Graph.Erdos_Renyi(500, 0.01)

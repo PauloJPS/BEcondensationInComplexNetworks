@@ -42,6 +42,12 @@ class boseEinteinNetwork():
     def getNormalization(self):
         return np.sum(self.degreeList * self.fitnessList)
 
+    def getFitnessDistribution(self):
+        return self.__fitnessDistribution
+
+    def get_m(self):
+        return self.__m
+
     def __atualizeAdjancency(self, targets):
         self.adjacency.append([])
         self.adjacency[self.n].append(targets)
@@ -59,10 +65,9 @@ class boseEinteinNetwork():
 
     def newNode(self):
         linkProb = self.getLinkProbabilityList()
-        self.n += 1
-        self.__time += 1
 
         targets = np.random.choice(self.__indexArray, size=self.__m, p=linkProb)
+
         self.__atualizeAdjancency(targets)
         self.__atualizeDegreeList(targets)
         self.__atualizeK()
@@ -70,9 +75,16 @@ class boseEinteinNetwork():
         self.fitnessList = np.append(self.fitnessList, self.__fitnessDistribution())
         self.__indexArray.append(self.n)
 
+        self.n += 1
+        self.__time += 1
+
+
+
     def addNodes(self, N):
-        for i in range(N):
+        for i in range(N-1):
             self.newNode()
+
+   
 
 
 
