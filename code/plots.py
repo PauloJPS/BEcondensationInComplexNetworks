@@ -5,6 +5,40 @@ import networkx as nx
 from igraph2nx import *
 from dists import *
 
+
+def plotPhaseTransitions():
+
+    t = np.loadtxt('data/t_N_1000_m_2_tri_500_theta_2')
+    mu = np.loadtxt('data/mu_N_1000_m_2_tri_500_theta_2')
+    k = np.loadtxt('data/k_N_1000_m_2_tri_500_theta_2')
+
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(16,9))
+    ax[0].scatter(t, mu, alpha=0.6, c='black')
+    ax[1].scatter(t, k, alpha=0.6, c ='black')
+    
+    ax[0].plot([0.74, 0.74], [0.1, 10], color='black')
+    ax[1].plot([0.74, 0.74], [0.0001, 10], color='black')
+
+    ax[1].set_xlabel('T', fontsize=20)
+    ax[0].set_ylabel(r'$|\mu|$', fontsize=30, labelpad=30, rotation=0)
+    ax[1].set_ylabel(r'$K_{max}/mt$', fontsize=30)
+    
+    ax[1].set_xscale('log')
+    ax[0].set_yscale('log')
+    ax[1].set_yscale('log')
+
+    ax[1].set_xlim((0.001, 10))
+    ax[1].set_ylim((0.001, 5))
+    ax[0].set_ylim((0.5, 5))
+
+    ax[0].text(1.3, 0.8, r"$FGR$", fontsize=30)
+    ax[0].text(0.05, 2.5, r"$BE$", fontsize=30)
+
+    ax[1].text(1.3, 0.8, r"$FGR$", fontsize=30)
+    ax[1].text(0.04, 0.01, r"$BE$", fontsize=30)
+
+    plt.tight_layout(pad=1.3) 
+
 def plotRhoHist():
     ensamble = []
     rho = lambda x : 2*(-np.log(x))/x

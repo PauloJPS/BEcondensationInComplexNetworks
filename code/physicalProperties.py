@@ -4,7 +4,8 @@ from dists import *
 
 class Condensete(boseEinteinNetwork):
     def __init__(self, N, beta, m,trials, fitnessDistribution, keys):
-        if fitnessDistribution=='FGR':fitnessDistribution = fitGetRicher
+        if fitnessDistribution=='FGR1':fitnessDistribution = fitGetRicher
+        elif fitnessDistribution=='FGR2': fitnessDistribution = pareto
         elif fitnessDistribution=='FGA': fitnessDistribution = scaleFree
         else: pass 
         super(Condensete, self).__init__(m, fitnessDistribution, keys)
@@ -19,7 +20,7 @@ class Condensete(boseEinteinNetwork):
     def partitionFunctio(self):
         Z = 0
         for i in self.K.items():
-            Z += np.exp(-self.beta * 1/self.beta * np.log(i[1])) * self.degreeList[i[0]]
+            Z += np.exp(np.log(i[1])) * self.degreeList[i[0]]
         return Z
 
     def meanValues(self):
@@ -42,15 +43,46 @@ class Condensete(boseEinteinNetwork):
         if type(temperatures) ==  type(None):
             temperatures = np.arange(0.1, 3, 0.1)
         mu = []
-        maxK = []
+        mu2 = []
+        kmax = []
+        kmax2 = []
         for i in temperatures:
-            keys['beta'] = 1/i
+            if 'beta' in keys:
+                keys['beta'] = 1/i
             condensate = Condensete(N=N, beta=1/i,  m=m, trials=trials, fitnessDistribution=fitnessDistribution, keys=keys)
-            aux_mu, aux_maxK = condensate.getChemicalPotencial_and_maxK()
+            aux_mu, aux_kmax = condensate.getChemicalPotencial_and_maxK()
             mu.append(aux_mu)
-            maxK.append(aux_maxK)
+            mu2.append(aux_mu**2)
+            kmax.append(aux_kmax)
+            kmax2.append(aux_kmax**2)
             print(i)
-        return np.array(temperatures), np.array(mu), np.array(maxK)
+        mu = np.array(mu)/trials
+        mu2 = np.array(mu2)/trials
+        kmax = np.array(kmax)/trials
+        kmax2 = np.array(kmax2)/trials
+        return np.array(temperatures), mu, kmax, np.sqrt(mu2-mu**2), np.sqrt(kmax2 - kmax**2)
+
+    @staticmethod
+    def getLambdaTBE(N, m , trials):
+        fitnessDistribution = pareto
+        keys = {'lamb':0}
+        lamb = np.arange(0.5, 1.5, 0.01)
+        kmax = []
+        kmax2 = []
+        mu = []
+        mu2 = []
+        for i in lamb:
+            keys['lamb'] = i
+            condensate = Condensete(N=N, beta=1,  m=m, trials=trials, fitnessDistribution=fitnessDistribution, keys=keys)
+            aux_mu, aux_kmax = condensate.getChemicalPotencial_and_maxK()
+            mu.append(aux_mu)
+            mu2.append(aux_mu**2)
+            kmax.append(aux_kmax)
+            kmax2.append(aux_kmax**2)
+            print(i)
+        return np.array(lamb), np.array(mu), np.array(kmax), np.array(mu2), np.array(kmax2)
+
+
 
 
 
