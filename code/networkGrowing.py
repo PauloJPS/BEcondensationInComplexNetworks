@@ -16,7 +16,7 @@ class boseEinteinNetwork():
     def __networkInicialization(self):
         self.__createFitnessList()
         self.__createDegreeList()
-        self.__createAdjacency()
+        self.__createEdgeList()
         self.__createK()
         self.__time = self.__m
 
@@ -26,12 +26,15 @@ class boseEinteinNetwork():
     def __createDegreeList(self):
         self.degreeList = np.array([self.__m for i in range(self.n)])
 
-    def __createAdjacency(self):
-        self.adjacency = [[] for i in range(self.n + 1)]
-        for i in range(self.n + 1):
-            for j in range(self.n + 1):
-                if j != i: self.adjacency[i].append(j)
-                else: continue
+    def __createEdgeList(self):
+        self.edgeList = set()
+        for i in range(self.__m):
+            for j in range(self.__m):
+                if i!=j:
+                    if (i,j) in self.edgeList or (j,i)  in self.edgeList:
+                        pass
+                    else: 
+                        self.edgeList.add((i,j))
 
     def __createK(self):
         for i in range(self.__m):
@@ -52,11 +55,9 @@ class boseEinteinNetwork():
     def get_m(self):
         return self.__m
 
-    def __atualizeAdjancency(self, targets):
-        self.adjacency.append([])
-        self.adjacency[self.n].append(targets)
+    def __atualizeEdgeList(self, targets):
         for i in targets:
-            self.adjacency[i].append(self.n)
+            self.edgeList.add((self.n, i))
 
     def __atualizeDegreeList(self, targets):
         self.degreeList = np.append(self.degreeList, self.__m)
@@ -70,10 +71,9 @@ class boseEinteinNetwork():
     def newNode(self):
         linkProb = self.getLinkProbabilityList()
 
-        targets = np.random.choice(self.__indexArray, size=self.__m, p=linkProb)
-
-        self.__atualizeAdjancency(targets)
+        targets = np.random.choice(self.__indexArray, size=self.__m, p=linkProb, replace=False)
         self.__atualizeDegreeList(targets)
+        self.__atualizeEdgeList(targets)
         self.__atualizeK()
 
         self.fitnessList = np.append(self.fitnessList, self.__fitnessDistribution(**self.keys))
